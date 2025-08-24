@@ -4,12 +4,12 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.CreativeModeTab;
+
 
 public class ItemArmorTemplate extends ArmorItem {
 
     public ItemArmorTemplate(final ArmorMaterial materialIn, final EquipmentSlot equipmentSlotIn) {
-        super(materialIn, equipmentSlotIn, new Properties().tab(CreativeModeTab.TAB_COMBAT));
+        super(materialIn, equipmentSlotIn, new Properties());
     }
 
     public static final ArmorMaterial REFLECTIVE_ARMOR_MATERIAL = EnumHelper
