@@ -51,7 +51,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -79,7 +79,7 @@ public class Signal extends BasicBlock {
     private final Map<SEProperty, Integer> signalPropertiesToInt = new HashMap<>();
 
     public Signal(final SignalProperties prop) {
-        super(Properties.of(Material.STONE).noOcclusion()
+        super(Properties.of().mapColor(MapColor.STONE).noOcclusion()
                 .lightLevel(u -> ConfigHandler.GENERAL.lightEmission.get())
                 .isRedstoneConductor((_u1, _u2, _u3) -> false));
         this.prop = prop;

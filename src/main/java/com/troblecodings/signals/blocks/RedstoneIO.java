@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class RedstoneIO extends BasicBlock {
@@ -32,7 +32,7 @@ public class RedstoneIO extends BasicBlock {
     public static final TileEntitySupplierWrapper SUPPLIER = RedstoneIOTileEntity::new;
 
     public RedstoneIO() {
-        super(Properties.of(Material.METAL));
+        super(Properties.of().mapColor(MapColor.METAL));
         this.registerDefaultState(stateDefinition.any().setValue(POWER, false));
     }
 
