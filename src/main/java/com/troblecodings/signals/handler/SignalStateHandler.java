@@ -34,8 +34,9 @@ import com.troblecodings.signals.enums.ChangedState;
 import io.netty.buffer.Unpooled;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.game.ClientboundCustomPayloadPacket;
-import net.minecraft.network.protocol.game.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,8 +46,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStoppingEvent;
-import net.minecraftforge.event.world.ChunkWatchEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.ChunkWatchEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.NetworkEvent.ClientCustomPayloadEvent;
 import net.minecraftforge.network.NetworkRegistry;
@@ -382,8 +383,8 @@ public final class SignalStateHandler implements INetworkSync {
     }
 
     @SubscribeEvent
-    public static void onWorldLoad(final WorldEvent.Load load) {
-        final Level world = (Level) load.getWorld();
+    public static void onWorldLoad(final LevelEvent.Load load) {
+        final Level world = (Level) load.getLevel();
         if (world.isClientSide)
             return;
         final Path path = PathGetter.getNewPathForFiles(world, "signalfiles");
@@ -397,8 +398,8 @@ public final class SignalStateHandler implements INetworkSync {
     }
 
     @SubscribeEvent
-    public static void onWorldSave(final WorldEvent.Save save) {
-        final Level world = (Level) save.getWorld();
+    public static void onWorldSave(final LevelEvent.Save save) {
+        final Level world = (Level) save.getLevel();
         if (world.isClientSide)
             return;
 
@@ -413,11 +414,11 @@ public final class SignalStateHandler implements INetworkSync {
     }
 
     @SubscribeEvent
-    public static void onWorldUnload(final WorldEvent.Unload unload) {
-        if (unload.getWorld().isClientSide())
+    public static void onWorldUnload(final LevelEvent.Unload unload) {
+        if (unload.getLevel().isClientSide())
             return;
         synchronized (ALL_LEVEL_FILES) {
-            ALL_LEVEL_FILES.remove(unload.getWorld());
+            ALL_LEVEL_FILES.remove(unload.getLevel());
         }
     }
 
@@ -495,7 +496,7 @@ public final class SignalStateHandler implements INetworkSync {
 
     @SubscribeEvent
     public static void onChunkWatch(final ChunkWatchEvent.Watch event) {
-        final ServerLevel world = event.getWorld();
+        final ServerLevel world = event.getLevel();
         if (world.isClientSide)
             return;
         final ChunkAccess chunk = world.getChunk(event.getPos().getWorldPosition());
@@ -513,7 +514,7 @@ public final class SignalStateHandler implements INetworkSync {
 
     @SubscribeEvent
     public static void onChunkUnWatch(final ChunkWatchEvent.UnWatch event) {
-        final ServerLevel world = event.getWorld();
+        final ServerLevel world = event.getLevel();
         if (world.isClientSide)
             return;
         final ChunkAccess chunk = world.getChunk(event.getPos().getWorldPosition());
@@ -612,14 +613,31 @@ public final class SignalStateHandler implements INetworkSync {
         });
     }
 
+    // Custom payload for SignalState packets
+    public record SignalStatePayload(FriendlyByteBuf buffer) implements CustomPacketPayload {
+        public static final ResourceLocation ID = new ResourceLocation(OpenSignalsMain.MODID, "signalstatehandler");
+        
+        @Override
+        public ResourceLocation id() {
+            return ID;
+        }
+        
+        @Override
+        public void write(FriendlyByteBuf buffer) {
+            buffer.writeBytes(this.buffer);
+        }
+    }
+
     private static void sendTo(final Player player, final ByteBuffer buf) {
         final FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.copiedBuffer(buf.position(0)));
+        final SignalStatePayload payload = new SignalStatePayload(buffer);
+        
         if (player instanceof ServerPlayer) {
             final ServerPlayer server = (ServerPlayer) player;
-            server.connection.send(new ClientboundCustomPayloadPacket(channelName, buffer));
+            server.connection.send(new ClientboundCustomPayloadPacket(payload));
         } else {
             final Minecraft mc = Minecraft.getInstance();
-            mc.getConnection().send(new ServerboundCustomPayloadPacket(channelName, buffer));
+            mc.getConnection().send(new ServerboundCustomPayloadPacket(payload));
         }
     }
 
