@@ -94,14 +94,18 @@ public class PathwayRequesterTileEntity extends SyncableTileEntity
     }
 
     @Override
+    public boolean link(final BlockPos pos) {
+        linkedSignalBox = pos;
+        setChanged();
+        return true;
+    }
+
     public boolean link(final BlockPos pos, final CompoundTag tag) {
         @SuppressWarnings("deprecation")
         final Block block = Registry.BLOCK.get(
                 new ResourceLocation(OpenSignalsMain.MODID, tag.getString(pos.toShortString())));
         if (block instanceof SignalBox) {
-            linkedSignalBox = pos;
-            setChanged();
-            return true;
+            return link(pos);
         }
         return false;
     }
