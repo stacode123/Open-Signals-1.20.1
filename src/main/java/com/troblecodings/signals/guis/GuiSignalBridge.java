@@ -151,7 +151,11 @@ public class GuiSignalBridge extends GuiBase {
         final UIEntity list = new UIEntity();
         scroll.add(list);
         list.setInherits(true);
-        list.add(new UIBox(UIBox.VBOX, 1).setPageable(false));
+        final UIBox tempBox1 = new UIBox(UIBox.VBOX, 1);
+
+        tempBox1.setPageable(false);
+
+        list.add(tempBox1);
 
         final List<SignalBridgeBasicBlock> typeBlocks = SignalBridgeBlockParser.SIGNAL_BRIDGE_BLOCKS
                 .getOrDefault(type, new ArrayList<>());
@@ -199,10 +203,18 @@ public class GuiSignalBridge extends GuiBase {
         plane.setWidth(TILE_COUNT * TILE_WIDTH);
         plane.add(new UIBorder(GuiSignalBox.GRID_COLOR, 2));
         plane.add(new UIColor(GuiSignalBox.BACKGROUND_COLOR));
-        plane.add(new UIBox(UIBox.VBOX, 0).setPageable(false));
+        final UIBox tempBox2 = new UIBox(UIBox.VBOX, 0);
+
+        tempBox2.setPageable(false);
+
+        plane.add(tempBox2);
         for (int x = 0; x < TILE_COUNT; x++) {
             final UIEntity row = new UIEntity();
-            row.add(new UIBox(UIBox.HBOX, 0).setPageable(false));
+            final UIBox tempBox3 = new UIBox(UIBox.HBOX, 0);
+
+            tempBox3.setPageable(false);
+
+            row.add(tempBox3);
             row.setHeight(TILE_WIDTH);
             row.setWidth(TILE_WIDTH);
             for (int y = 0; y < TILE_COUNT; y++) {
@@ -299,7 +311,11 @@ public class GuiSignalBridge extends GuiBase {
         final UIEntity list = new UIEntity();
         scroll.add(list);
         list.setInherits(true);
-        list.add(new UIBox(UIBox.VBOX, 1).setPageable(false));
+        final UIBox tempBox4 = new UIBox(UIBox.VBOX, 1);
+
+        tempBox4.setPageable(false);
+
+        list.add(tempBox4);
         final IIntegerable<Signal> availableSignals = SizeIntegerables.of(
                 I18Wrapper.format("gui.signalbridge.signals"), SIGNALS_FOR_BRIDGE.size(),
                 i -> SIGNALS_FOR_BRIDGE.get(i));
@@ -709,7 +725,7 @@ public class GuiSignalBridge extends GuiBase {
             final UILabel label = new UILabel(
                     customName.isEmpty()
                             ? I18Wrapper.format("block." + OpenSignalsMain.MODID + "."
-                                    + block.delegate.name().getPath())
+                                    + block.builtInRegistryHolder().key().location().getPath())
                             : customName);
             label.setCenterY(false);
             label.setTextColor(blockEntity.getBasicTextColor());
@@ -717,7 +733,7 @@ public class GuiSignalBridge extends GuiBase {
         }
         final UIEntity preview = new UIEntity();
         final UIBlockRender renderer = new UIBlockRender(renderScale, renderHeight);
-        renderer.setBlockState(new UIBlockRenderInfo(block.defaultBlockState(), modelInfo));
+        renderer.setBlockState(block.defaultBlockState(), modelInfo);
         preview.setWidth(60);
         preview.setHeight(previewHeight);
         preview.setX(previewX);

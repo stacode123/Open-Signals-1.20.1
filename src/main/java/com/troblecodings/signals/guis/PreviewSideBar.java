@@ -120,7 +120,7 @@ public class PreviewSideBar {
         } else {
             blockRender = new UIBlockRender(20, height);
         }
-        blockRender.setBlockState(new UIBlockRenderInfo(signal.defaultBlockState(), wrapper));
+        blockRender.setBlockState(signal.defaultBlockState(), wrapper);
         blockRenderEntity.add(blockRender);
     }
 }

@@ -240,7 +240,7 @@ public class GuiSignalController extends GuiBase {
         }
         lowerEntity.setInherits(true);
 
-        final String name = I18Wrapper.format("tile." + signal.delegate.name().getPath() + ".name")
+        final String name = I18Wrapper.format("tile." + signal.builtInRegistryHolder().key().location().getPath() + ".name")
                 + "; Name: "
                 + ClientNameHandler.getClientName(new StateInfo(mc.level, controller.getPos()));
 

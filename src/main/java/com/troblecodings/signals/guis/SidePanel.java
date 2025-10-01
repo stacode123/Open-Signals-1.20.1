@@ -149,7 +149,11 @@ public class SidePanel {
         list.setHeight(100);
         list.setX(-4);
         list.setY(-10);
-        list.add(new UIBox(UIBox.VBOX, 2).setPageable(false));
+        final UIBox tempBox = new UIBox(UIBox.VBOX, 2);
+
+        tempBox.setPageable(false);
+
+        list.add(tempBox);
 
         final UIEntity emergencyEntity = new UIEntity();
         emergencyEntity.setHeight(20);
