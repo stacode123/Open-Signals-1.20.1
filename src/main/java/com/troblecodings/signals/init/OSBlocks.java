@@ -89,7 +89,7 @@ public final class OSBlocks {
     @SubscribeEvent
     public static void registerBlock(final RegisterEvent event) {
         event.register(ForgeRegistries.Keys.BLOCKS, registry -> {
-            if (POST.getRegistryName() == null || POST_CONNECTABLE.getRegistryName() == null) {
+            if (BLOCKS_TO_REGISTER.isEmpty()) {
                 OSBlocks.init();
             }
             BLOCKS_TO_REGISTER.forEach(registry::register);
@@ -99,7 +99,7 @@ public final class OSBlocks {
     @SubscribeEvent
     public static void registerBlockEntitys(final RegisterEvent event) {
         event.register(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, registry -> {
-            if (POST.getRegistryName() == null || POST_CONNECTABLE.getRegistryName() == null) {
+            if (BLOCKS_TO_REGISTER.isEmpty()) {
                 OSBlocks.init();
             }
             BasicBlock.BLOCK_ENTITYS.values().forEach(registry::register);
@@ -109,12 +109,13 @@ public final class OSBlocks {
     @SubscribeEvent
     public static void registerItem(final RegisterEvent event) {
         event.register(ForgeRegistries.Keys.ITEMS, registry -> {
-            if (POST.getRegistryName() == null || POST_CONNECTABLE.getRegistryName() == null) {
+            if (BLOCKS_TO_REGISTER.isEmpty()) {
                 OSBlocks.init();
             }
             BLOCKS_TO_REGISTER.forEach(block -> {
                 if (block.shouldHaveItem()) {
-                    registry.register(block.getRegistryName(), new BlockItem(block, new Properties().tab(OSTabs.TAB)));
+                    final ResourceLocation key = block.builtInRegistryHolder().key().location();
+                    registry.register(key, new BlockItem(block, new Properties().tab(OSTabs.TAB)));
                 }
             });
         });

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -49,7 +49,7 @@ public class SignalCustomModel implements UnbakedModel {
     private static final Map<ResourceLocation, BakedModel> LOCATION_TO_MODEL = new HashMap<>();
 
     @Nonnull
-    public static final Random RANDOM = new Random();
+    public static final RandomSource RANDOM = RandomSource.create();
 
     private final SignalAngel angel;
     private final List<SignalModelLoaderInfo> list;
@@ -113,10 +113,10 @@ public class SignalCustomModel implements UnbakedModel {
         matrix.multiply(rotation);
         matrix.multiply(reverse);
 
-        model.getQuads(null, null, RANDOM, ModelData.EMPTY)
+        model.getQuads(null, null, RANDOM)
                 .forEach(quad -> transform(quad, matrix));
         for (final Direction direction : Direction.values()) {
-            model.getQuads(null, direction, RANDOM, ModelData.EMPTY)
+            model.getQuads(null, direction, RANDOM)
                     .forEach(quad -> transform(quad, matrix));
         }
 

@@ -2,7 +2,7 @@ package com.troblecodings.signals.models;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
@@ -57,11 +57,11 @@ public class SignalBakedModel implements BakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
+    public List<BakedQuad> getQuads(BlockState state, Direction side, RandomSource rand) {
         return baseGetter.getQuads(state, side, rand);
     }
 
-    public List<BakedQuad> getQuads(final BlockState state, final Direction side, final Random rand,
+    public List<BakedQuad> getQuads(final BlockState state, final Direction side, final RandomSource rand,
             final ModelData extraData) {
         final List<BakedQuad> quadBuilder = new ArrayList<>();
         final ModelInfoWrapper modelData = new ModelInfoWrapper(extraData);

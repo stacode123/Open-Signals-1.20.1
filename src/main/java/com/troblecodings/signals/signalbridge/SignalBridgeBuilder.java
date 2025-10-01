@@ -166,14 +166,14 @@ public class SignalBridgeBuilder {
         pointForBlocks.forEach((point, block) -> {
             final NBTWrapper tag = new NBTWrapper();
             point.write(tag);
-            tag.putString(SIGNALBRIDGE_BLOCKS, block.getRegistryName().getPath());
+            tag.putString(SIGNALBRIDGE_BLOCKS, block.builtInRegistryHolder().key().location().getPath());
             blockList.add(tag);
         });
         final List<NBTWrapper> signalList = new ArrayList<>();
         vecForSignal.forEach((entry, vec) -> {
             final NBTWrapper tag = new NBTWrapper();
             vec.writeNBT(tag);
-            tag.putString(SIGNALS_ON_BRIDGE, entry.getValue().getRegistryName().getPath());
+            tag.putString(SIGNALS_ON_BRIDGE, entry.getValue().builtInRegistryHolder().key().location().getPath());
             tag.putString(CUSTOMNAME, entry.getKey());
             signalList.add(tag);
         });
