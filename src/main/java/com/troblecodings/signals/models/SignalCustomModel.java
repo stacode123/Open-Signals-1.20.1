@@ -39,7 +39,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.client.model.data.ModelData;
 
@@ -151,12 +150,7 @@ public class SignalCustomModel implements UnbakedModel {
             if (info.model == null) {
                 final ResourceLocation location =
                         new ResourceLocation(OpenSignalsMain.MODID, "block/" + info.name);
-                if (bakery instanceof ForgeModelBakery) {
-                    info.model = ((ForgeModelBakery) bakery).getModelOrLogError(location,
-                            String.format("Could not find %s!", location));
-                } else {
-                    info.model = bakery.getModel(location);
-                }
+                info.model = bakery.getModel(location);
             }
         });
         final Quaternion quaternion = angel.getQuaternion();
