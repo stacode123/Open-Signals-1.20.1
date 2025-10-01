@@ -22,14 +22,14 @@ import com.troblecodings.signals.blocks.Signal;
 import com.troblecodings.signals.models.ModelInfoWrapper;
 import com.troblecodings.signals.signalbox.Point;
 
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class SignalBridgeBuilder {
 
     public static final ModelInfoWrapper EMPTY_WRAPPER = new ModelInfoWrapper(
-            EmptyModelData.INSTANCE);
+            ModelData.EMPTY);
 
     public static final String SIGNALBRIDGE_BLOCKS = "signalBridgeBlocks";
     public static final String SIGNALS_ON_BRIDGE = "signalsOnBridge";
@@ -196,12 +196,12 @@ public class SignalBridgeBuilder {
             final Point point = new Point();
             point.read(tag);
             pointForBlocks.put(point,
-                    (SignalBridgeBasicBlock) Registry.BLOCK.get(new ResourceLocation(
+                    (SignalBridgeBasicBlock) BuiltInRegistries.BLOCK.get(new ResourceLocation(
                             OpenSignalsMain.MODID, tag.getString(SIGNALBRIDGE_BLOCKS))));
         });
         wrapper.getList(SIGNALS_ON_BRIDGE).forEach(tag -> {
             vecForSignal.put(Maps.immutableEntry(tag.getString(CUSTOMNAME),
-                    (Signal) Registry.BLOCK.get(new ResourceLocation(OpenSignalsMain.MODID,
+                    (Signal) BuiltInRegistries.BLOCK.get(new ResourceLocation(OpenSignalsMain.MODID,
                             tag.getString(SIGNALS_ON_BRIDGE)))),
                     VectorWrapper.of(tag));
         });
