@@ -12,11 +12,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IDynamicBakedModel;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 @OnlyIn(Dist.CLIENT)
-public class SignalBakedModel implements IDynamicBakedModel {
+public class SignalBakedModel implements BakedModel {
 
     private final BakedModel baseGetter;
     private final List<BakedModelPair> bakedCache;
@@ -58,13 +57,17 @@ public class SignalBakedModel implements IDynamicBakedModel {
     }
 
     @Override
+    public List<BakedQuad> getQuads(BlockState state, Direction side, Random rand) {
+        return baseGetter.getQuads(state, side, rand);
+    }
+
     public List<BakedQuad> getQuads(final BlockState state, final Direction side, final Random rand,
-            final IModelData extraData) {
+            final ModelData extraData) {
         final List<BakedQuad> quadBuilder = new ArrayList<>();
         final ModelInfoWrapper modelData = new ModelInfoWrapper(extraData);
         for (final BakedModelPair pair : bakedCache) {
             if (pair.predicate.test(modelData))
-                quadBuilder.addAll(pair.model.getQuads(state, side, rand, modelData));
+                quadBuilder.addAll(pair.model.getQuads(state, side, rand));
         }
         return quadBuilder;
     }

@@ -24,12 +24,12 @@ import com.troblecodings.signals.signalbox.Point;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class SignalBridgeBuilder {
 
     public static final ModelInfoWrapper EMPTY_WRAPPER = new ModelInfoWrapper(
-            EmptyModelData.INSTANCE);
+            ModelData.EMPTY);
 
     public static final String SIGNALBRIDGE_BLOCKS = "signalBridgeBlocks";
     public static final String SIGNALS_ON_BRIDGE = "signalsOnBridge";

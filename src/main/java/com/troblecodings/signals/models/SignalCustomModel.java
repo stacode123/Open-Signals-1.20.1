@@ -41,7 +41,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.SimpleModelState;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 @OnlyIn(Dist.CLIENT)
 public class SignalCustomModel implements UnbakedModel {
@@ -113,10 +113,10 @@ public class SignalCustomModel implements UnbakedModel {
         matrix.multiply(rotation);
         matrix.multiply(reverse);
 
-        model.getQuads(null, null, RANDOM, EmptyModelData.INSTANCE)
+        model.getQuads(null, null, RANDOM, ModelData.EMPTY)
                 .forEach(quad -> transform(quad, matrix));
         for (final Direction direction : Direction.values()) {
-            model.getQuads(null, direction, RANDOM, EmptyModelData.INSTANCE)
+            model.getQuads(null, direction, RANDOM, ModelData.EMPTY)
                     .forEach(quad -> transform(quad, matrix));
         }
 

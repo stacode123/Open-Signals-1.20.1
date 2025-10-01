@@ -23,7 +23,7 @@ import com.troblecodings.signals.models.ModelInfoWrapper;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class SignalTileEntity extends SyncableTileEntity implements NamableWrapper, ISyncable {
 
@@ -92,7 +92,7 @@ public class SignalTileEntity extends SyncableTileEntity implements NamableWrapp
     }
 
     @Override
-    public @Nonnull IModelData getModelData() {
+    public @Nonnull ModelData getModelData() {
         return new ModelInfoWrapper(properties);
     }
 
