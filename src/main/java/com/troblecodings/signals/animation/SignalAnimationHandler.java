@@ -25,7 +25,7 @@ import net.minecraft.client.renderer.block.ModelBlockRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 public class SignalAnimationHandler {
 
@@ -53,7 +53,7 @@ public class SignalAnimationHandler {
         final ModelBlockRenderer renderer = info.dispatcher.getModelRenderer();
         final VertexConsumer vertex =
                 info.source.getBuffer(ItemBlockRenderTypes.getRenderType(state, false));
-        final IModelData data = tile.getModelData();
+        final ModelData data = tile.getModelData();
         final boolean shouldUpdateAnimation = shouldUpdateAnimation();
 
         animationPerModel.forEach((model, entry) -> {

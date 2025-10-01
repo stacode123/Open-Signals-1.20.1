@@ -30,7 +30,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class SignalBoxHandler {
@@ -319,7 +319,7 @@ public final class SignalBoxHandler {
     private static final String BOOL_STATE = "boolState";
 
     @SubscribeEvent
-    public static void onWorldSave(final WorldEvent.Save event) {
+    public static void onWorldSave(final LevelEvent.Save event) {
         final Level world = (Level) event.getWorld();
         if (world.isClientSide)
             return;
@@ -367,7 +367,7 @@ public final class SignalBoxHandler {
     }
 
     @SubscribeEvent
-    public static void onWorldLoad(final WorldEvent.Load event) {
+    public static void onWorldLoad(final LevelEvent.Load event) {
         final Level world = (Level) event.getWorld();
         if (world.isClientSide)
             return;

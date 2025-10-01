@@ -6,8 +6,8 @@ import java.util.ArrayList;
 
 import com.google.gson.Gson;
 import com.troblecodings.core.NBTWrapper;
-import com.troblecodings.opensignals.linkableapi.Linkingtool;
-import com.troblecodings.opensignals.linkableapi.MultiLinkingTool;
+import com.troblecodings.linkableapi.Linkingtool;
+import com.troblecodings.linkableapi.MultiLinkingTool;
 import com.troblecodings.signals.OpenSignalsMain;
 import com.troblecodings.signals.blocks.Signal;
 import com.troblecodings.signals.items.ItemArmorTemplate;
@@ -22,9 +22,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 
 public final class OSItems {
 
@@ -159,9 +159,10 @@ public final class OSItems {
     }
 
     @SubscribeEvent
-    public static void registerItem(final RegistryEvent.Register<Item> event) {
-        OSItems.init();
-        final IForgeRegistry<Item> registry = event.getRegistry();
-        registeredItems.forEach(registry::register);
+    public static void registerItem(final RegisterEvent event) {
+        event.register(ForgeRegistries.Keys.ITEMS, registry -> {
+            OSItems.init();
+            registeredItems.forEach(item -> registry.register(item.getRegistryName(), item));
+        });
     }
 }

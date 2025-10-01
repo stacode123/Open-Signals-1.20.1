@@ -44,8 +44,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
-import net.minecraftforge.event.world.ChunkWatchEvent;
-import net.minecraftforge.event.world.WorldEvent;
+import net.minecraftforge.event.level.ChunkWatchEvent;
+import net.minecraftforge.event.level.WorldEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.network.NetworkEvent.ClientCustomPayloadEvent;
 import net.minecraftforge.network.NetworkRegistry;
@@ -230,7 +230,7 @@ public final class NameHandler implements INetworkSync {
     }
 
     @SubscribeEvent
-    public static void onWorldLoad(final WorldEvent.Load load) {
+    public static void onWorldLoad(final LevelEvent.Load load) {
         final Level world = (Level) load.getWorld();
         if (world.isClientSide)
             return;
@@ -245,7 +245,7 @@ public final class NameHandler implements INetworkSync {
     }
 
     @SubscribeEvent
-    public static void onWorldSave(final WorldEvent.Save event) {
+    public static void onWorldSave(final LevelEvent.Save event) {
         final Level world = (Level) event.getWorld();
         if (world.isClientSide)
             return;
@@ -260,7 +260,7 @@ public final class NameHandler implements INetworkSync {
     }
 
     @SubscribeEvent
-    public static void onWorldUnload(final WorldEvent.Unload unload) {
+    public static void onWorldUnload(final LevelEvent.Unload unload) {
         if (unload.getWorld().isClientSide())
             return;
         synchronized (ALL_LEVEL_FILES) {
@@ -286,7 +286,7 @@ public final class NameHandler implements INetworkSync {
     }
 
     @SubscribeEvent
-    public static void onChunkWatch(final ChunkWatchEvent.Watch event) {
+    public static void onChunkWatch(final ChunkEvent.Watch event) {
         final ServerLevel world = event.getWorld();
         if (world.isClientSide)
             return;
@@ -304,7 +304,7 @@ public final class NameHandler implements INetworkSync {
     }
 
     @SubscribeEvent
-    public static void onChunkUnWatch(final ChunkWatchEvent.UnWatch event) {
+    public static void onChunkUnWatch(final ChunkEvent.UnWatch event) {
         final ServerLevel world = event.getWorld();
         if (world.isClientSide)
             return;

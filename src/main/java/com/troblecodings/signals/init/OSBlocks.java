@@ -27,9 +27,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Item.Properties;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 
 public final class OSBlocks {
 
@@ -87,35 +87,37 @@ public final class OSBlocks {
     }
 
     @SubscribeEvent
-    public static void registerBlock(final RegistryEvent.Register<Block> event) {
-        if (POST.getRegistryName() == null || POST_CONNECTABLE.getRegistryName() == null) {
-            OSBlocks.init();
-        }
-        final IForgeRegistry<Block> registry = event.getRegistry();
-        BLOCKS_TO_REGISTER.forEach(registry::register);
-    }
-
-    @SubscribeEvent
-    public static void registerBlockEntitys(
-            final RegistryEvent.Register<BlockEntityType<?>> event) {
-        if (POST.getRegistryName() == null || POST_CONNECTABLE.getRegistryName() == null) {
-            OSBlocks.init();
-        }
-        final IForgeRegistry<BlockEntityType<?>> registry = event.getRegistry();
-        BasicBlock.BLOCK_ENTITYS.values().forEach(registry::register);
-    }
-
-    @SubscribeEvent
-    public static void registerItem(final RegistryEvent.Register<Item> event) {
-        if (POST.getRegistryName() == null || POST_CONNECTABLE.getRegistryName() == null) {
-            OSBlocks.init();
-        }
-        final IForgeRegistry<Item> registry = event.getRegistry();
-        BLOCKS_TO_REGISTER.forEach(block -> {
-            if (block.shouldHaveItem()) {
-                registry.register(new BlockItem(block, new Properties().tab(OSTabs.TAB))
-                        .setRegistryName(block.getRegistryName()));
+    public static void registerBlock(final RegisterEvent event) {
+        event.register(ForgeRegistries.Keys.BLOCKS, registry -> {
+            if (BLOCKS_TO_REGISTER.isEmpty()) {
+                OSBlocks.init();
             }
+            BLOCKS_TO_REGISTER.forEach(registry::register);
+        });
+    }
+
+    @SubscribeEvent
+    public static void registerBlockEntitys(final RegisterEvent event) {
+        event.register(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, registry -> {
+            if (BLOCKS_TO_REGISTER.isEmpty()) {
+                OSBlocks.init();
+            }
+            BasicBlock.BLOCK_ENTITYS.values().forEach(registry::register);
+        });
+    }
+
+    @SubscribeEvent
+    public static void registerItem(final RegisterEvent event) {
+        event.register(ForgeRegistries.Keys.ITEMS, registry -> {
+            if (BLOCKS_TO_REGISTER.isEmpty()) {
+                OSBlocks.init();
+            }
+            BLOCKS_TO_REGISTER.forEach(block -> {
+                if (block.shouldHaveItem()) {
+                    final ResourceLocation key = block.builtInRegistryHolder().key().location();
+                    registry.register(key, new BlockItem(block, new Properties().tab(OSTabs.TAB)));
+                }
+            });
         });
     }
 }

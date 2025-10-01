@@ -180,7 +180,7 @@ public class Signal extends BasicBlock {
     }
 
     public String getSignalTypeName() {
-        return this.delegate.name().getPath();
+        return this.builtInRegistryHolder().key().location().getPath();
     }
 
     @Override

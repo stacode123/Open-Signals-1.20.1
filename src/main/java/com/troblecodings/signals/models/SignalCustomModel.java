@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Random;
+import net.minecraft.util.RandomSource;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -39,9 +39,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.SimpleModelState;
-import net.minecraftforge.client.model.data.EmptyModelData;
+import net.minecraftforge.client.model.data.ModelData;
 
 @OnlyIn(Dist.CLIENT)
 public class SignalCustomModel implements UnbakedModel {
@@ -49,7 +48,7 @@ public class SignalCustomModel implements UnbakedModel {
     private static final Map<ResourceLocation, BakedModel> LOCATION_TO_MODEL = new HashMap<>();
 
     @Nonnull
-    public static final Random RANDOM = new Random();
+    public static final RandomSource RANDOM = RandomSource.create();
 
     private final SignalAngel angel;
     private final List<SignalModelLoaderInfo> list;
@@ -113,10 +112,10 @@ public class SignalCustomModel implements UnbakedModel {
         matrix.multiply(rotation);
         matrix.multiply(reverse);
 
-        model.getQuads(null, null, RANDOM, EmptyModelData.INSTANCE)
+        model.getQuads(null, null, RANDOM)
                 .forEach(quad -> transform(quad, matrix));
         for (final Direction direction : Direction.values()) {
-            model.getQuads(null, direction, RANDOM, EmptyModelData.INSTANCE)
+            model.getQuads(null, direction, RANDOM)
                     .forEach(quad -> transform(quad, matrix));
         }
 
@@ -151,12 +150,7 @@ public class SignalCustomModel implements UnbakedModel {
             if (info.model == null) {
                 final ResourceLocation location =
                         new ResourceLocation(OpenSignalsMain.MODID, "block/" + info.name);
-                if (bakery instanceof ForgeModelBakery) {
-                    info.model = ((ForgeModelBakery) bakery).getModelOrLogError(location,
-                            String.format("Could not find %s!", location));
-                } else {
-                    info.model = bakery.getModel(location);
-                }
+                info.model = bakery.getModel(location);
             }
         });
         final Quaternion quaternion = angel.getQuaternion();

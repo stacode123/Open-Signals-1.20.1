@@ -45,10 +45,14 @@ public final class SignalBoxUIHelper {
             plane.setY(plane.getY() + y);
             plane.update();
         }, 2));
-        plane.add(new UIBox(UIBox.VBOX, 0).setPageable(false));
+        final UIBox planeBox = new UIBox(UIBox.VBOX, 0);
+        planeBox.setPageable(false);
+        plane.add(planeBox);
         for (int x = 0; x < GuiSignalBox.TILE_COUNT; x++) {
             final UIEntity row = new UIEntity();
-            row.add(new UIBox(UIBox.HBOX, 0).setPageable(false));
+            final UIBox rowBox = new UIBox(UIBox.HBOX, 0);
+            rowBox.setPageable(false);
+            row.add(rowBox);
             row.setHeight(GuiSignalBox.TILE_WIDTH);
             row.setWidth(GuiSignalBox.TILE_WIDTH);
             for (int y = 0; y < GuiSignalBox.TILE_COUNT; y++) {

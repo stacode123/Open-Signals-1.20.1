@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
 
-import com.troblecodings.core.VectorWrapper;
 import com.troblecodings.signals.OpenSignalsMain;
 import com.troblecodings.signals.animation.SignalAnimation;
 import com.troblecodings.signals.blocks.Signal;
@@ -18,11 +17,11 @@ import com.troblecodings.signals.parser.LogicParser;
 import com.troblecodings.signals.parser.LogicalParserException;
 
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ForgeModelBakery;
 
 @OnlyIn(Dist.CLIENT)
 public final class CustomModelLoader implements ResourceManagerReloadListener {
@@ -103,21 +102,13 @@ public final class CustomModelLoader implements ResourceManagerReloadListener {
     }
 
     public void prepare() {
-        final ForgeModelBakery bakery = ForgeModelBakery.instance();
-        if (!(bakery.unbakedCache instanceof MapWrapper)) {
-            wrapper = new MapWrapper(bakery.unbakedCache, registeredModels.keySet());
-            defaultModel(wrapper, "ghostblock");
-            registeredModels.forEach((name, loaderList) -> {
-                defaultModel(wrapper, name);
-                for (final SignalAngel angel : SignalAngel.values()) {
-                    wrapper.putNormal(
-                            new ModelResourceLocation(OpenSignalsMain.MODID, name,
-                                    "angel=" + angel.getNameWrapper()),
-                            new SignalCustomModel(angel, loaderList));
-                }
-            });
-            bakery.unbakedCache = wrapper;
-        }
+        // In 1.19.2, model registration is handled through ModelEvent.RegisterAdditional
+        // This method is kept for compatibility but does nothing
+        // The actual registration happens in OSModels.registerAdditional
+    }
+
+    public static Map<String, List<SignalModelLoaderInfo>> getRegisteredModels() {
+        return registeredModels;
     }
 
     @Override

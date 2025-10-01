@@ -1,12 +1,15 @@
 package com.troblecodings.signals.init;
 
+import com.troblecodings.signals.OpenSignalsMain;
 import com.troblecodings.signals.blocks.Signal;
+import com.troblecodings.signals.core.SignalAngel;
 import com.troblecodings.signals.models.CustomModelLoader;
 
 import net.minecraft.client.color.block.BlockColors;
-import net.minecraft.world.item.Item;
-import net.minecraftforge.client.event.ColorHandlerEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.event.ModelEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -16,10 +19,26 @@ public final class OSModels {
     }
 
     @SubscribeEvent
-    public static void register(final ModelRegistryEvent event) {
-        OSItems.registeredItems.forEach(OSModels::registerModel);
+    public static void registerAdditional(final ModelEvent.RegisterAdditional event) {
+        // Register models from CustomModelLoader
+        CustomModelLoader.getRegisteredModels().forEach((name, loaderList) -> {
+            // Register the base model and inventory variant
+            event.register(new ModelResourceLocation(OpenSignalsMain.MODID, name, "inventory"));
+            event.register(new ModelResourceLocation(OpenSignalsMain.MODID, name, ""));
+            
+            // Register angel variants
+            for (final SignalAngel angel : SignalAngel.values()) {
+                event.register(new ModelResourceLocation(OpenSignalsMain.MODID, name,
+                        "angel=" + angel.getNameWrapper()));
+            }
+        });
+        
+        // Register ghostblock
+        event.register(new ModelResourceLocation(OpenSignalsMain.MODID, "ghostblock", "inventory"));
+        event.register(new ModelResourceLocation(OpenSignalsMain.MODID, "ghostblock", ""));
+        
+        // Trigger the reload to populate CustomModelLoader
         CustomModelLoader.INSTANCE.onResourceManagerReload(null);
-        return;
     }
 
     @SubscribeEvent
@@ -28,7 +47,7 @@ public final class OSModels {
     }
 
     @SubscribeEvent
-    public static void addColor(final ColorHandlerEvent.Block event) {
+    public static void addColor(final RegisterColorHandlersEvent.Block event) {
         final BlockColors colors = event.getBlockColors();
         OSBlocks.BLOCKS_TO_REGISTER.forEach(block -> {
             if (block instanceof Signal) {
@@ -37,8 +56,5 @@ public final class OSModels {
                     colors.register((_u1, _u2, _u3, index) -> signal.colorMultiplier(index), block);
             }
         });
-    }
-
-    private static void registerModel(final Item item) {
     }
 }
